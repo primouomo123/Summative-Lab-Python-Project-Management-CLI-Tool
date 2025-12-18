@@ -1,27 +1,21 @@
-from models.base import BaseModel
-from models.project import Project
+from models.base import Entity
+from pydantic import EmailStr
 
-class User(BaseModel):
-    all_by_id = {}
+class User(Entity):
+    name: str
+    email: EmailStr
 
-    def __init__(self, name, email, id=None):
-        super().__init__(id)
-        self.name = name
-        self.email = email
-        User.all_by_id[self.id] = self
+    all = []
 
-    @property
-    def projects(self):
-        """Return all projects assigned to this user"""
-        return [p for p in Project.all_by_id.values() if p.user_id == self.id]
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "email": self.email
-        }
+    def __init__(self, **data):
+        super().__init__(**data)
+        User.all.append(self)
+    
+    def all_projects(self):
+        """Return all projects belonging to this user"""
+        from models.project import Project
+        return [project for project in Project.all if project.user_id == self.id]
 
     @classmethod
-    def from_dict(cls, data):
-        return cls(name=data["name"], email=data["email"], id=data["id"])
+    def from_dict(cls, data: dict):
+        return cls.model_validate(data)
