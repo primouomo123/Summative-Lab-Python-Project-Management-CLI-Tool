@@ -7,3 +7,9 @@ class BaseModel:
     
     def to_dict(self):
         return self.__dict__
+
+class User(BaseModel):
+    def __init__(self, username, email):
+        super().__init__()
+        self.username = username
+        self.email = email
