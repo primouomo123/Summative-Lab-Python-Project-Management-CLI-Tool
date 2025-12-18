@@ -20,3 +20,10 @@ class Project(BaseModel):
         self.title = title
         self.description = description
         self.due_date = due_date
+
+class Task(BaseModel):
+    def __init__(self, title, assigned_to):
+        super().__init__()
+        self.title = title
+        self.assigned_to = assigned_to
+        self.status = 'pending'  # default status
