@@ -2,6 +2,8 @@ from models.base import BaseModel
 from models.user import User
 from models.task import Task
 
+from datetime import datetime
+
 class Project(BaseModel):
     all_by_id = {}
 
@@ -12,6 +14,21 @@ class Project(BaseModel):
         self.due_date = due_date
         self.user_id = user_id  # store User ID for JSON
         Project.all_by_id[self.id] = self
+    
+    @property
+    def due_date(self):
+        return self._due_date
+    @due_date.setter
+    def due_date(self, value):
+        if isinstance(value, str):
+            try:
+                self._due_date = datetime.strptime(value, "%Y-%m-%d").date()
+            except ValueError:
+                raise ValueError("Due date must be in YYYY-MM-DD format")
+        elif isinstance(value, datetime):
+            self._due_date = value.date()
+        else:
+            self._due_date = value
 
     @property
     def user(self):
