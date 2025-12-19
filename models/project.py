@@ -1,6 +1,5 @@
 from datetime import datetime
 from models.base import BaseModel
-from models.user import User
 
 class Project(BaseModel):
     all = []
@@ -52,9 +51,11 @@ class Project(BaseModel):
     
     @assigned_user_id.setter
     def assigned_user_id(self, value):
+        from models.user import User
         if value not in User.get_user_ids():
             raise ValueError("Invalid user ID")
         self._assigned_user_id = value
     
-    def get_all_projects_ids():
+    @staticmethod
+    def get_projects_ids():
         return [p.id for p in Project.all]

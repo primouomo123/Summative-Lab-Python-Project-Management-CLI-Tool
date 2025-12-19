@@ -1,11 +1,12 @@
 from models.base import BaseModel
+from models.project import Project
 
 class Task(BaseModel):
-    def __init__(self, title, status, assigned_to):
-        all =[]
-        status = ["Pending", "In Progress", "Completed"]
+    all = []
+    ALLOWED_STATUSES = ["Pending", "In Progress", "Completed"]
 
-        super().__init__()
+    def __init__(self, title, status, assigned_to, id=None):
+        super().__init__(id)
         self.title = title
         self.status = status
         self.assigned_to = assigned_to
@@ -25,12 +26,21 @@ class Task(BaseModel):
         return self._status
     @status.setter
     def status(self, value):
-        if value not in Task.status:
+        if value not in Task.ALLOWED_STATUSES:
             raise ValueError("Invalid status value")
         self._status = value
     
+    @property
+    def assigned_to(self):
+        return self._assigned_to
+    @assigned_to.setter
+    def assigned_to(self, value):
+        if value not in Project.get_projects_ids():
+            raise ValueError("Invalid project ID")
+        self._assigned_to = value
+    
 
     def update_status(self, new_status):
-        if new_status not in Task.status:
+        if new_status not in Task.ALLOWED_STATUSES:
             raise ValueError("Invalid status value")
         self.status = new_status

@@ -1,5 +1,4 @@
 from models.base import BaseModel
-from models.project import Project
 
 class User(BaseModel):
     all = []
@@ -33,7 +32,9 @@ class User(BaseModel):
     @property
     def projects(self):
         """Return all projects belonging to this user dynamically"""
-        return [p for p in Project.all if p.user_id == self.id]
+        from models.project import Project
+        return [p for p in Project.all if p.assigned_user_id == self.id]
     
-    def get_users_ids():
+    @staticmethod
+    def get_user_ids():
         return [u.id for u in User.all]
