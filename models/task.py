@@ -1,14 +1,13 @@
 from models.base import BaseModel
-from models.project import Project
 
 class Task(BaseModel):
     all = []
     ALLOWED_STATUSES = ["Pending", "Completed"]
 
-    def __init__(self, title, status, assigned_to, id=None):
+    def __init__(self, title, assigned_to, id=None):
         super().__init__(id)
         self.title = title
-        self.status = status
+        self.status = "Pending"
         self.assigned_to = assigned_to
         Task.all.append(self)
     
@@ -35,12 +34,14 @@ class Task(BaseModel):
         return self._assigned_to
     @assigned_to.setter
     def assigned_to(self, value):
-        if value not in Project.get_projects_ids():
-            raise ValueError("Invalid project ID")
+        if not isinstance(value, str):
+            raise ValueError("Assigned to must be a string")
         self._assigned_to = value
     
-
-    def update_status(self, new_status):
-        if new_status not in Task.ALLOWED_STATUSES:
-            raise ValueError("Invalid status value")
-        self.status = new_status
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "status": self.status,
+            "assigned_to": self.assigned_to
+        }

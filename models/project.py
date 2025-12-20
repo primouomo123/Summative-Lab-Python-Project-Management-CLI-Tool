@@ -51,11 +51,15 @@ class Project(BaseModel):
     
     @assigned_user_id.setter
     def assigned_user_id(self, value):
-        from models.user import User
-        if value not in User.get_user_ids():
-            raise ValueError("Invalid user ID")
+        if not isinstance(value, str):
+            raise ValueError("Assigned user ID must be a string")
         self._assigned_user_id = value
     
-    @staticmethod
-    def get_projects_ids():
-        return [p.id for p in Project.all]
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "due_date": self.due_date,
+            "assigned_user_id": self.assigned_user_id
+        }

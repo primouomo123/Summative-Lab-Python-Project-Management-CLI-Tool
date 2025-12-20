@@ -1,4 +1,3 @@
-
 from models.user import User
 from models.project import Project
 from models.task import Task
@@ -16,6 +15,8 @@ def all_projects():
 def all_tasks():
     return load_from_json("data/data.json")["tasks"]
 
+
+# ---------- USERS FUNCTIONS FOR THE COMMANDS ----------
 # Add user function
 def add_user(args):
     """Function to add a new user"""
@@ -38,31 +39,40 @@ def list_users(args):
         print("No users found.")
         return
 
-    print("List of Users:")
+    print("List of Users:\n")
     for user in users:
-        print(f"ID: {user['id']}, Name: {user['name']}, Email: {user['email']}")
+        print(f"ID: {user['id']}, Name: {user['name']}, Email: {user['email']}\n")
 
 # Projects by user function
-def projects_by_user(user_id):
-    user = next((u for u in all_users() if u["id"] == user_id), None)
+def projects_by_user(args):
     """Function to get projects by user ID"""
+    user = next((u for u in all_users() if u["id"] == args.user_id), None)
+    if not user:
+        print(f"Error: User ID {args.user_id} does not exist.")
+        return
     if not all_projects():
         print("No projects found.")
         return
-    projects_found = [p for p in all_projects() if p["assigned_user_id"] == user_id]
+    projects_found = [p for p in all_projects() if p["assigned_user_id"] == args.user_id]
     if not projects_found:
-        print(f"No projects found for {user['name']} with user ID {user_id}.")
+        print(f"No projects found for {user['name']} with user ID {args.user_id}.")
         return
-    print (f"Projects for {user['name']} with user ID {user_id}:")
+    print (f"Projects for {user['name']} with user ID {args.user_id}:\n")
     for project in projects_found:
-        print(f"ID: {project['id']}, Title: {project['title']}, Due Date: {project['due_date']}")
+        print(f"ID: {project['id']}, Title: {project['title']}, Due Date: {project['due_date']}\n")
 
+
+# ---------- PROJECTS FUNCTIONS FOR THE COMMANDS ----------
 # Add project function
 def add_project(args):
     """Function to add a new project"""
     user_ids = [u["id"] for u in all_users()]
     if args.assigned_user_id not in user_ids:
         print(f"Error: User ID {args.assigned_user_id} does not exist.")
+        return
+    project = next((p for p in all_projects() if p["title"] == args.title and p["assigned_user_id"] == args.assigned_user_id), None)
+    if project:
+        print(f"Project with title {args.title} already exists for the user. The project id is {project['id']}")
         return
 
     new_project = Project(args.title, args.description, args.due_date, args.assigned_user_id)
@@ -79,25 +89,26 @@ def list_projects(args):
         print("No projects found.")
         return
 
-    print("List of Projects:")
+    print("List of Projects:\n")
     for project in projects:
-        print(f"ID: {project['id']}, Title: {project['title']}, Due Date: {project['due_date']}, Assigned User ID: {project['assigned_user_id']}")
+        print(f"ID: {project['id']}, Title: {project['title']}, Due Date: {project['due_date']}, Assigned User ID: {project['assigned_user_id']}\n")
 
 # Tasks by project function
-def tasks_by_project(project_id):
+def tasks_by_project(args):
     """Function to get tasks by project ID"""
-    project = next((p for p in all_projects() if p["id"] == project_id), None)
+    project = next((p for p in all_projects() if p["id"] == args.project_id), None)
     if not all_tasks():
         print("No tasks found.")
         return
-    tasks_found = [t for t in all_tasks() if t["assigned_to"] == project_id]
+    tasks_found = [t for t in all_tasks() if t["assigned_to"] == args.project_id]
     if not tasks_found:
-        print(f"No tasks found for Project {project['title']} with ID {project_id}.")
+        print(f"No tasks found for Project {project['title']} with ID {args.project_id}.")
         return
-    print (f"Tasks for Project {project['title']} with ID {project_id}:")
+    print (f"Tasks for Project {project['title']} with ID {args.project_id}:\n")
     for task in tasks_found:
-        print(f"ID: {task['id']}, Title: {task['title']}, Status: {task['status']}")
+        print(f"ID: {task['id']}, Title: {task['title']}, Status: {task['status']}\n")
 
+# ---------- TASKS FUNCTIONS FOR THE COMMANDS ----------
 # Add task function
 def add_task(args):
     """Function to add a new task"""
@@ -105,7 +116,11 @@ def add_task(args):
     if args.assigned_to not in project_ids:
         print(f"Error: Project ID {args.assigned_to} does not exist.")
         return
-    new_task = Task(args.title, args.status, args.assigned_to)
+    task = next((t for t in all_tasks() if t["title"] == args.title and t["assigned_to"] == args.assigned_to), None)
+    if task:
+        print(f"Task with title {args.title} already exists for the project. The task id is {task['id']}")
+        return
+    new_task = Task(args.title, args.assigned_to)
     data = load_from_json("data/data.json")
     data["tasks"].append(new_task.to_dict())
     save_to_json("data/data.json", data)
@@ -119,6 +134,48 @@ def list_tasks(args):
         print("No tasks found.")
         return
 
-    print("List of Tasks:")
+    print("List of Tasks:\n")
     for task in tasks:
-        print(f"ID: {task['id']}, Title: {task['title']}, Status: {task['status']}, Assigned To Project ID: {task['assigned_to']}")
+        print(f"ID: {task['id']}, Title: {task['title']}, Status: {task['status']}, Assigned To Project ID: {task['assigned_to']}\n")
+
+# Complete task function
+def complete_task(args):
+    """Function to mark a task as completed"""
+    data = load_from_json("data/data.json")
+    task = next((t for t in data["tasks"] if t["id"] == args.task_id), None)
+
+    if not task:
+        print(f"Error: Task ID {args.task_id} does not exist.")
+        return
+
+    if task["status"] == "Completed":
+        print(f"Task ID {args.task_id} is already completed.")
+        return
+
+    task["status"] = "Completed"
+    save_to_json("data/data.json", data)
+    print(f"✅ Task ID {args.task_id} marked as completed.")
+
+def list_pending_tasks(args):
+    """Function to list all pending tasks"""
+    tasks = all_tasks()
+    pending_tasks = [t for t in tasks if t["status"] == "Pending"]
+    if not pending_tasks:
+        print("No pending tasks found.")
+        return
+
+    print("List of Pending Tasks:\n")
+    for task in pending_tasks:
+        print(f"ID: {task['id']}, Title: {task['title']}, Assigned To Project ID: {task['assigned_to']}\n")
+
+def list_completed_tasks(args):
+    """Function to list all completed tasks"""
+    tasks = all_tasks()
+    completed_tasks = [t for t in tasks if t["status"] == "Completed"]
+    if not completed_tasks:
+        print("No completed tasks found.")
+        return
+
+    print("List of Completed Tasks:\n")
+    for task in completed_tasks:
+        print(f"ID: {task['id']}, Title: {task['title']}, Assigned To Project ID: {task['assigned_to']}\n")
