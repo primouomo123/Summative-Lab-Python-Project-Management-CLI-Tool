@@ -3,7 +3,7 @@ from models.project import Project
 
 class Task(BaseModel):
     all = []
-    ALLOWED_STATUSES = ["Pending", "In Progress", "Completed"]
+    ALLOWED_STATUSES = ["Pending", "Completed"]
 
     def __init__(self, title, status, assigned_to, id=None):
         super().__init__(id)
