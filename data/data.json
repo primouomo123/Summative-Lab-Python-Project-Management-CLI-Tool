@@ -1,5 +1,11 @@
 {
-    "users": [],
+    "users": [
+        {
+            "id": "988f1e9b-dbda-4e5f-bcc6-c94a8c7c8f5c",
+            "name": "Alice",
+            "email": "alice@example.com"
+        }
+    ],
     "projects": [],
     "tasks": []
 }
