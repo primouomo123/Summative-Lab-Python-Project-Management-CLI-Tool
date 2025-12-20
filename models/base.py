@@ -1,8 +1,11 @@
-from pydantic import BaseModel, Field
 import uuid
 
-class Entity(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+class BaseModel:
+    def __init__(self, id=None):
+        if id is None:
+            self.id = str(uuid.uuid4())
+        else:
+            self.id = id
 
-    class Config:
-        extra = "forbid"
+    def to_dict(self):
+        return self.__dict__.copy()
