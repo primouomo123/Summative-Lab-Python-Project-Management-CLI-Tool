@@ -1,10 +1,14 @@
 import argparse
+from rich_argparse import RichHelpFormatter
+from rich.console import Console
 import utils.util_functions as util
+console = Console()
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Project Management CLI Tool"
+        description="Project Management CLI Tool",
+        formatter_class=RichHelpFormatter
     )
 
     subparsers = parser.add_subparsers(
@@ -99,7 +103,7 @@ def main():
 
     # ---------- DISPATCH ----------
     args = parser.parse_args()
-    args.func(args)
+    args.func(args, console=console)
 
 
 if __name__ == "__main__":

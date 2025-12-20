@@ -64,6 +64,10 @@ python main.py <command> [options]
   ```sh
   python main.py list_projects
   ```
+- List tasks by project:
+  ```sh
+  python main.py tasks_by_project --project-id <PROJECT_ID>
+  ```
 
 ### Task Commands
 - Add a task:
@@ -73,10 +77,6 @@ python main.py <command> [options]
 - List all tasks:
   ```sh
   python main.py list_tasks
-  ```
-- List tasks by project:
-  ```sh
-  python main.py tasks_by_project --project-id <PROJECT_ID>
   ```
 - Mark a task as completed:
   ```sh
