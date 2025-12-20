@@ -38,12 +38,6 @@ class Task(BaseModel):
             raise ValueError("Assigned to must be a string")
         self._assigned_to = value
     
-
-    def update_status(self, new_status):
-        if new_status not in Task.ALLOWED_STATUSES:
-            raise ValueError("Invalid status value")
-        self.status = new_status
-    
     def to_dict(self):
         return {
             "id": self.id,

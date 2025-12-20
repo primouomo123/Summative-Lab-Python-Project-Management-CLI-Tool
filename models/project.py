@@ -55,10 +55,6 @@ class Project(BaseModel):
             raise ValueError("Assigned user ID must be a string")
         self._assigned_user_id = value
     
-    @staticmethod
-    def get_projects_ids():
-        return [p.id for p in Project.all]
-    
     def to_dict(self):
         return {
             "id": self.id,

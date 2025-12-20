@@ -5,19 +5,26 @@ This CLI tool helps you manage users, projects, and tasks, storing all data in a
 ## Setup
 
 1. **Install Python 3**  
-   Make sure Python 3 is installed on your system.
+  Make sure Python 3 is installed on your system.
 
-2. **Install dependencies**  
-   If you have dependencies, install them with:
-   ```bash
-   pip install -r requirements.txt
-   ```
+2. **Create and activate a virtual environment (recommended)**
+  Using pipenv:
+  ```bash
+  pipenv install
+  pipenv shell
+  ```
 
-3. **Run the CLI**  
-   From the project root directory:
-   ```bash
-   python main.py <command> [options]
-   ```
+3. **Install dependencies**  
+  If you have dependencies, install them with:
+  ```bash
+  pip install -r requirements.txt
+  ```
+
+4. **Run the CLI**  
+  From the project root directory:
+  ```bash
+  python main.py <command> [options]
+  ```
 
 ## Commands & Usage
 
