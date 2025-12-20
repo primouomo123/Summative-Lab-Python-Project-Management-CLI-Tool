@@ -15,6 +15,8 @@ def all_projects():
 def all_tasks():
     return load_from_json("data/data.json")["tasks"]
 
+
+# ---------- USERS FUNCTIONS FOR THE COMMANDS ----------
 # Add user function
 def add_user(args):
     """Function to add a new user"""
@@ -56,9 +58,15 @@ def projects_by_user(user_id):
     for project in projects_found:
         print(f"ID: {project['id']}, Title: {project['title']}, Due Date: {project['due_date']}\n")
 
+
+# ---------- PROJECTS FUNCTIONS FOR THE COMMANDS ----------
 # Add project function
 def add_project(args):
     """Function to add a new project"""
+    project = next((p for p in all_projects() if p["title"] == args.title), None)
+    if project:
+        print(f"Project with title {args.title} already exists. The project id is {project['id']}")
+        return
     user_ids = [u["id"] for u in all_users()]
     if args.assigned_user_id not in user_ids:
         print(f"Error: User ID {args.assigned_user_id} does not exist.")
@@ -97,6 +105,7 @@ def tasks_by_project(project_id):
     for task in tasks_found:
         print(f"ID: {task['id']}, Title: {task['title']}, Status: {task['status']}\n")
 
+# ---------- TASKS FUNCTIONS FOR THE COMMANDS ----------
 # Add task function
 def add_task(args):
     """Function to add a new task"""
