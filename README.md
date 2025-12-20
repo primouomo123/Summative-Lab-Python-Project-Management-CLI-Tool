@@ -1,87 +1,80 @@
 # Project Management CLI Tool
 
-This CLI tool helps you manage users, projects, and tasks, storing all data in a JSON file.
+A command-line tool for managing users, projects, and tasks. Data is stored in `data/data.json`.
 
-## Setup
+## Requirements
+- Python 3.12+
+- Install dependencies with Pipenv or pip:
+  - `pipenv install`  
+  or
+  - `pip install -r requirements.txt`
 
-1. **Install Python 3**  
-  Make sure Python 3 is installed on your system.
+## Usage
+Run the CLI tool from the project root:
 
-2. **Create and activate a virtual environment (recommended)**
-  Using pipenv:
-  ```bash
-  pipenv install
-  pipenv shell
-  ```
-
-3. **Install dependencies**  
-  If you have dependencies, install them with:
-  ```bash
-  pip install -r requirements.txt
-  ```
-
-4. **Run the CLI**  
-  From the project root directory:
-  ```bash
-  python main.py <command> [options]
-  ```
-
-## Commands & Usage
+```
+python main.py <command> [options]
+```
 
 ### User Commands
-- **Add a user**
-  ```bash
+- **Add a user:**
+  ```
   python main.py add_user --name "Alice" --email "alice@example.com"
   ```
-- **List all users**
-  ```bash
+- **List users:**
+  ```
   python main.py list_users
   ```
-- **List projects by user**
-  ```bash
+- **List projects by user:**
+  ```
   python main.py projects_by_user --user-id <USER_ID>
   ```
 
 ### Project Commands
-- **Add a project**
-  ```bash
-  python main.py add_project --title "Project X" --description "Desc" --due-date "2025-12-31" --assigned-user-id <USER_ID>
+- **Add a project:**
   ```
-- **List all projects**
-  ```bash
+  python main.py add_project --title "Project X" --description "Desc" --due-date "YYYY-MM-DD" --assigned-user-id <USER_ID>
+  ```
+- **List projects:**
+  ```
   python main.py list_projects
   ```
 
 ### Task Commands
-- **Add a task**
-  ```bash
+- **Add a task:**
+  ```
   python main.py add_task --title "Task 1" --assigned-to <PROJECT_ID>
   ```
-- **List all tasks**
-  ```bash
+- **List tasks:**
+  ```
   python main.py list_tasks
   ```
-- **List tasks by project**
-  ```bash
+- **List tasks by project:**
+  ```
   python main.py tasks_by_project --project-id <PROJECT_ID>
   ```
-- **Mark a task as completed**
-  ```bash
+- **Complete a task:**
+  ```
   python main.py complete_task --task-id <TASK_ID>
   ```
-- **List pending tasks**
-  ```bash
+- **List pending tasks:**
+  ```
   python main.py list_pending_tasks
   ```
-- **List completed tasks**
-  ```bash
+- **List completed tasks:**
+  ```
   python main.py list_completed_tasks
   ```
 
-## Notes
-- All data is stored in `data/data.json`.
-- User, project, and task IDs are auto-generated.
-- Make sure to use valid IDs when assigning users or projects.
-- Task status can be `Pending` or `Completed`.
+## Data Persistence
+All data is stored in `data/data.json`. The file is created automatically if it does not exist.
 
----
+## Testing
+To run tests (if available):
+```
+pytest
+```
+
+## Notes
+- User, project, and task IDs are auto-generated.
+- Make sure to use valid IDs when referencing users or projects.
