@@ -1,4 +1,3 @@
-
 from models.user import User
 from models.project import Project
 from models.task import Task
@@ -38,9 +37,9 @@ def list_users(args):
         print("No users found.")
         return
 
-    print("List of Users:")
+    print("List of Users:\n")
     for user in users:
-        print(f"ID: {user['id']}, Name: {user['name']}, Email: {user['email']}")
+        print(f"ID: {user['id']}, Name: {user['name']}, Email: {user['email']}\n")
 
 # Projects by user function
 def projects_by_user(user_id):
@@ -53,9 +52,9 @@ def projects_by_user(user_id):
     if not projects_found:
         print(f"No projects found for {user['name']} with user ID {user_id}.")
         return
-    print (f"Projects for {user['name']} with user ID {user_id}:")
+    print (f"Projects for {user['name']} with user ID {user_id}:\n")
     for project in projects_found:
-        print(f"ID: {project['id']}, Title: {project['title']}, Due Date: {project['due_date']}")
+        print(f"ID: {project['id']}, Title: {project['title']}, Due Date: {project['due_date']}\n")
 
 # Add project function
 def add_project(args):
@@ -79,9 +78,9 @@ def list_projects(args):
         print("No projects found.")
         return
 
-    print("List of Projects:")
+    print("List of Projects:\n")
     for project in projects:
-        print(f"ID: {project['id']}, Title: {project['title']}, Due Date: {project['due_date']}, Assigned User ID: {project['assigned_user_id']}")
+        print(f"ID: {project['id']}, Title: {project['title']}, Due Date: {project['due_date']}, Assigned User ID: {project['assigned_user_id']}\n")
 
 # Tasks by project function
 def tasks_by_project(project_id):
@@ -94,9 +93,9 @@ def tasks_by_project(project_id):
     if not tasks_found:
         print(f"No tasks found for Project {project['title']} with ID {project_id}.")
         return
-    print (f"Tasks for Project {project['title']} with ID {project_id}:")
+    print (f"Tasks for Project {project['title']} with ID {project_id}:\n")
     for task in tasks_found:
-        print(f"ID: {task['id']}, Title: {task['title']}, Status: {task['status']}")
+        print(f"ID: {task['id']}, Title: {task['title']}, Status: {task['status']}\n")
 
 # Add task function
 def add_task(args):
@@ -105,7 +104,7 @@ def add_task(args):
     if args.assigned_to not in project_ids:
         print(f"Error: Project ID {args.assigned_to} does not exist.")
         return
-    new_task = Task(args.title, args.status, args.assigned_to)
+    new_task = Task(args.title, args.assigned_to)
     data = load_from_json("data/data.json")
     data["tasks"].append(new_task.to_dict())
     save_to_json("data/data.json", data)
@@ -119,6 +118,48 @@ def list_tasks(args):
         print("No tasks found.")
         return
 
-    print("List of Tasks:")
+    print("List of Tasks:\n")
     for task in tasks:
-        print(f"ID: {task['id']}, Title: {task['title']}, Status: {task['status']}, Assigned To Project ID: {task['assigned_to']}")
+        print(f"ID: {task['id']}, Title: {task['title']}, Status: {task['status']}, Assigned To Project ID: {task['assigned_to']}\n")
+
+# Complete task function
+def complete_task(task_id):
+    """Function to mark a task as completed"""
+    data = load_from_json("data/data.json")
+    task = next((t for t in data["tasks"] if t["id"] == task_id), None)
+
+    if not task:
+        print(f"Error: Task ID {task_id} does not exist.")
+        return
+
+    if task["status"] == "Completed":
+        print(f"Task ID {task_id} is already completed.")
+        return
+
+    task["status"] = "Completed"
+    save_to_json("data/data.json", data)
+    print(f"✅ Task ID {task_id} marked as completed.")
+
+def list_pending_tasks(args):
+    """Function to list all pending tasks"""
+    tasks = all_tasks()
+    pending_tasks = [t for t in tasks if t["status"] == "Pending"]
+    if not pending_tasks:
+        print("No pending tasks found.")
+        return
+
+    print("List of Pending Tasks:\n")
+    for task in pending_tasks:
+        print(f"ID: {task['id']}, Title: {task['title']}, Assigned To Project ID: {task['assigned_to']}\n")
+
+def list_completed_tasks(args):
+    """Function to list all completed tasks"""
+    tasks = all_tasks()
+    completed_tasks = [t for t in tasks if t["status"] == "Completed"]
+    if not completed_tasks:
+        print("No completed tasks found.")
+        return
+
+    print("List of Completed Tasks:\n")
+    for task in completed_tasks:
+        print(f"ID: {task['id']}, Title: {task['title']}, Assigned To Project ID: {task['assigned_to']}\n")

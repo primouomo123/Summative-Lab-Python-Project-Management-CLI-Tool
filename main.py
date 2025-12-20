@@ -13,7 +13,6 @@ def main():
     )
 
     # ---------- USER COMMANDS ----------
-
     add_user_parser = subparsers.add_parser(
         "add_user",
         help="Add a new user"
@@ -36,7 +35,6 @@ def main():
     projects_by_user_parser.set_defaults(func=util.projects_by_user)
 
     # ---------- PROJECT COMMANDS ----------
-
     add_project_parser = subparsers.add_parser(
         "add_project",
         help="Add a new project"
@@ -54,13 +52,11 @@ def main():
     list_projects_parser.set_defaults(func=util.list_projects)
 
     # ---------- TASK COMMANDS ----------
-
     add_task_parser = subparsers.add_parser(
         "add_task",
         help="Add a new task"
     )
     add_task_parser.add_argument("--title", required=True)
-    add_task_parser.add_argument("--status", required=True)
     add_task_parser.add_argument("--assigned-to", required=True)
     add_task_parser.set_defaults(func=util.add_task)
 
@@ -76,6 +72,30 @@ def main():
     )
     tasks_by_project_parser.add_argument("--project-id", required=True)
     tasks_by_project_parser.set_defaults(func=util.tasks_by_project)
+
+    complete_task_parser = subparsers.add_parser(
+        "complete_task",
+        help="Mark a task as completed"
+    )
+    complete_task_parser.add_argument(
+        "--task-id",
+        required=True,
+        help="Task ID to mark as completed"
+    )
+    complete_task_parser.set_defaults(func=util.complete_task)
+
+    # ---------- ADDITIONAL TASK COMMANDS ----------
+    list_pending_tasks_parser = subparsers.add_parser(
+        "list_pending_tasks",
+        help="List all pending tasks"
+    )
+    list_pending_tasks_parser.set_defaults(func=util.list_pending_tasks)
+
+    list_completed_tasks_parser = subparsers.add_parser(
+        "list_completed_tasks",
+        help="List all completed tasks"
+    )
+    list_completed_tasks_parser.set_defaults(func=util.list_completed_tasks)
 
     # ---------- DISPATCH ----------
     args = parser.parse_args()

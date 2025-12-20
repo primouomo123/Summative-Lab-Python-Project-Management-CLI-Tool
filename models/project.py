@@ -51,9 +51,8 @@ class Project(BaseModel):
     
     @assigned_user_id.setter
     def assigned_user_id(self, value):
-        from models.user import User
-        if value not in User.get_user_ids():
-            raise ValueError("Invalid user ID")
+        if not isinstance(value, str):
+            raise ValueError("Assigned user ID must be a string")
         self._assigned_user_id = value
     
     @staticmethod
