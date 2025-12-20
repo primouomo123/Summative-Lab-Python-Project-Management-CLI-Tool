@@ -2,6 +2,7 @@ from models.user import User
 from models.project import Project
 from models.task import Task
 from utils.storage import load_from_json, save_to_json
+from datetime import datetime
 from rich.console import Console
 from rich.table import Table
 
@@ -22,8 +23,22 @@ def all_tasks():
 # Add user function
 def add_user(args, console: Console):
     """Function to add a new user"""
-    user = next((u for u in all_users() if u["name"] == args.name), None)
+    # Validate name is a string
+    if not isinstance(args.name, str):
+        console.print(f"[red]Error: Name must be a string.[/red]")
+        return
+    # Validate email is a string
+    if not isinstance(args.email, str):
+        console.print(f"[red]Error: Email must be a string.[/red]")
+        return
+    # Validate email format
+    import re
+    email_pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+    if not re.match(email_pattern, args.email):
+        console.print(f"[red]Error: Email '{args.email}' is not a valid email address.[/red]")
+        return
 
+    user = next((u for u in all_users() if u["name"] == args.name), None)
     if user:
         console.print(f"[yellow]User with name {args.name} already exists. The user id is {user['id']}[/yellow]")
     else:
@@ -75,6 +90,27 @@ def projects_by_user(args, console: Console):
 # Add project function
 def add_project(args, console: Console):
     """Function to add a new project"""
+    # Validate title
+    if not isinstance(args.title, str) or not args.title.strip():
+        console.print(f"[red]Error: Title must be a non-empty string.[/red]")
+        return
+    # Validate description
+    if not isinstance(args.description, str):
+        console.print(f"[red]Error: Description must be a string.[/red]")
+        return
+    # Validate due-date using datetime
+    if not isinstance(args.due_date, str):
+        console.print(f"[red]Error: Due date must be a string in YYYY-MM-DD format.[/red]")
+        return
+    try:
+        datetime.strptime(args.due_date, "%Y-%m-%d")
+    except ValueError:
+        console.print(f"[red]Error: Due date must be a valid date in YYYY-MM-DD format.[/red]")
+        return
+    # Validate assigned_user_id
+    if not isinstance(args.assigned_user_id, str):
+        console.print(f"[red]Error: Assigned user ID must be a string.[/red]")
+        return
     user_ids = [u["id"] for u in all_users()]
     if args.assigned_user_id not in user_ids:
         console.print(f"[red]Error: User ID {args.assigned_user_id} does not exist.[/red]")
@@ -128,6 +164,14 @@ def tasks_by_project(args, console: Console):
 # Add task function
 def add_task(args, console: Console):
     """Function to add a new task"""
+    # Validate title
+    if not isinstance(args.title, str) or not args.title.strip():
+        console.print(f"[red]Error: Title must be a non-empty string.[/red]")
+        return
+    # Validate assigned_to
+    if not isinstance(args.assigned_to, str):
+        console.print(f"[red]Error: Assigned to (project ID) must be a string.[/red]")
+        return
     project_ids = [p["id"] for p in all_projects()]
     if args.assigned_to not in project_ids:
         console.print(f"[red]Error: Project ID {args.assigned_to} does not exist.[/red]")
