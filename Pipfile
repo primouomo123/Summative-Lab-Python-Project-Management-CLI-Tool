@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 pytest = "*"
+rich = "*"
+rich-argparse = "*"
 
 [dev-packages]
 
