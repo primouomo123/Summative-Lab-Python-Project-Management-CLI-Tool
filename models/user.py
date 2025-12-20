@@ -38,3 +38,10 @@ class User(BaseModel):
     @staticmethod
     def get_user_ids():
         return [u.id for u in User.all]
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email
+        }

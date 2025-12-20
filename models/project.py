@@ -59,3 +59,12 @@ class Project(BaseModel):
     @staticmethod
     def get_projects_ids():
         return [p.id for p in Project.all]
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "due_date": self.due_date,
+            "assigned_user_id": self.assigned_user_id
+        }

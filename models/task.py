@@ -44,3 +44,11 @@ class Task(BaseModel):
         if new_status not in Task.ALLOWED_STATUSES:
             raise ValueError("Invalid status value")
         self.status = new_status
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "status": self.status,
+            "assigned_to": self.assigned_to
+        }
